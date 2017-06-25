@@ -5,17 +5,29 @@
  * code.
  */
 
+// This import loads the firebase namespace along with all its type information.
+import * as firebase from 'firebase/app';
+// Initialize Firebase
+firebase.initializeApp({
+  apiKey: "AIzaSyDVSLi3ABjDJsyATiVZfmeXfcB2lP-LhwI",
+  authDomain: "basketball-courts-9993f.firebaseapp.com",
+  databaseURL: "https://basketball-courts-9993f.firebaseio.com",
+  projectId: "basketball-courts-9993f",
+  storageBucket: "basketball-courts-9993f.appspot.com",
+  messagingSenderId: "643469866942"
+});
+
 // Needed for redux-saga es6 generator support
 import 'babel-polyfill';
 
 // Import all the third party stuff
 import React from 'react';
+
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { applyRouterMiddleware, Router, browserHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
 import { useScroll } from 'react-router-scroll';
-import 'sanitize.css/sanitize.css';
 
 // Import root app
 import App from 'containers/App';
@@ -39,7 +51,8 @@ import configureStore from './store';
 import { translationMessages } from './i18n';
 
 // Import CSS reset and Global Styles
-import './global-styles';
+// import './global-styles';
+require('./scss/main.scss');
 
 // Import root routes
 import createRoutes from './routes';
