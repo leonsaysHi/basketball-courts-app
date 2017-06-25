@@ -17,18 +17,10 @@ module.exports = (options) => ({
       loader: 'babel-loader',
       exclude: /node_modules/,
       query: options.babelQuery,
-    }, {
-      // Do not transform vendor's CSS with CSS-modules
-      // The point is that they remain in global scope.
-      // Since we require these CSS files in our JS or CSS files,
-      // they will be a part of our compilation either way.
-      // So, no need for ExtractTextPlugin here.
-      test: /\.css$/,
-      include: /node_modules/,
-      loaders: ['style-loader', 'css-loader'],
-    }, {
-      test: /\.(eot|svg|ttf|woff|woff2)$/,
-      loader: 'file-loader',
+    }, { 
+      test: /\.(scss|css)$/, 
+      loaders: ['style-loader', 'css-loader', 'sass-loader?sourceMap=true'], 
+      exclude: /node_modules/ 
     }, {
       test: /\.(jpg|png|gif)$/,
       loaders: [
@@ -82,6 +74,7 @@ module.exports = (options) => ({
       '.js',
       '.jsx',
       '.react.js',
+      '.scss',
     ],
     mainFields: [
       'browser',
