@@ -1,7 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Map from '@/components/Map'
+
 import Login from '@/components/Login'
+import Map from '@/components/Map'
 import SignUp from '@/components/SignUp'
 
 import firebase from 'firebase'
