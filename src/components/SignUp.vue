@@ -1,15 +1,17 @@
 <template>
-  <div class="sign-up">
-    <h3>Sign up</h3>
-    <input type="email" v-model="email" placeholder="Email">
-    <br><input type="password" v-model="password" placeholder="Password">
-    <br><button v-on:click="signUp">Sign up</button>
-    <br><span>or <router-link to="/login">go back login</router-link></span>
+  <div class="form-signup">
+    <h3>Sign up</h3>    
+    <label for="inputEmail" class="sr-only">Email address</label>
+    <input v-model="email" type="email" id="inputEmail" class="form-control" placeholder="Email address" required="" autofocus="">
+    <label for="inputPassword" class="sr-only">Password</label>
+    <input v-model="password" type="password" id="inputPassword" class="form-control" placeholder="Password" required="">
+    <button class="btn btn-lg btn-primary btn-block" v-on:click="signUp">Sign in</button>
+    <p class="text-muted text-small">or <router-link to="/login">go back login</router-link></p>
   </div>
 </template>
 
 <script>
-  import firebase from 'firebase'
+  import firebase from '../modules/firebase'
 
   export default {
     name: 'signUp',
@@ -23,7 +25,7 @@
       signUp: function () {
         firebase.auth().createUserWithEmailAndPassword(this.email, this.password).then(
           (user) => {
-            this.$router.replace('map')
+            this.$router.replace('dashboard')
           },
           (err) => {
             alert('Oops. ' + err.message)

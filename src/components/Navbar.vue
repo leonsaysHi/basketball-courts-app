@@ -1,26 +1,56 @@
 <template>
-    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">      
-      <ul class="navbar-nav flex-row ml-md-auto d-none d-md-flex">
-        <li class="nav-item active">
-          <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+    <nav class="navbar navbar-dark fixed-top bg-dark">  
+      <ul class="navbar-nav flex-row">
+        <li class="nav-item mr-2" v-if="isAuth">
+          <router-link class="btn btn-light" to="/dashboard">Dashboard</router-link>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">TEST</a>
+        <li class="nav-item mr-2">
+          <router-link class="btn btn-light" to="/courts-map">Map</router-link>
+        </li>
+        <li class="nav-item mr-2" v-if="isAuth">
+          <router-link class="btn btn-light" to="/add-court">Add court</router-link>
+        </li>
+        <li class="nav-item mr-2">
+          <form class="form-inline">
+            <input class="form-control" type="text" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-success" type="submit">Search court</button>
+          </form>
+        </li>
+        <li class="nav-item mr-2" v-if="!isAuth">
+          <router-link class="nav-link" to="/login">Login</router-link>
+        </li>
+        <li class="nav-item mr-2" v-if="!isAuth">
+          <router-link class="nav-link" to="/sign-up">Signup</router-link>
+        </li>
+        <li class="nav-item mr-2" v-if="isAuth">
+          <button class="btn btn-outline-light" v-on:click="logout">Logout</button>
         </li>
       </ul>
-      <form class="form-inline ml-2">
-        <input class="form-control mr-2" type="text" placeholder="Search" aria-label="Search">
-        <button class="btn btn-outline-success my-2" type="submit">Search</button>
-      </form>
     </nav>
 </template>
 
 <script>
+  import firebase from '../modules/firebase'
+
   export default {
     name: 'Navbar',
     data () {
-      return {}
+      return {
+        isAuth: null
+      }
     },
-    methods: {}
+    methods: {
+      logout: function () {
+        firebase.auth().signOut().then(() => {
+          this.$router.replace('login')
+        })
+      }
+    },
+    created () {
+      this.isAuth = firebase.auth().currentUser
+      firebase.auth().onAuthStateChanged(user => {
+        this.isAuth = user
+      })
+    }
   }
 </script>

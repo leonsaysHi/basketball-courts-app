@@ -2,8 +2,10 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 import Login from '@/components/Login'
-import Map from '@/components/Map'
 import SignUp from '@/components/SignUp'
+import Dashboard from '@/components/Dashboard'
+import AddCourt from '@/components/AddCourt'
+import CourtsMap from '@/components/CourtsMap'
 
 import firebase from 'firebase'
 
@@ -30,9 +32,22 @@ let router = new Router({
       component: SignUp
     },
     {
-      path: '/map',
-      name: 'Map',
-      component: Map,
+      path: '/courts-map',
+      name: 'CourtsMap',
+      component: CourtsMap
+    },
+    {
+      path: '/dashboard',
+      name: 'Dashboard',
+      component: Dashboard,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/add-court',
+      name: 'AddCourt',
+      component: AddCourt,
       meta: {
         requiresAuth: true
       }
@@ -44,8 +59,7 @@ router.beforeEach((to, from, next) => {
   let currentUser = firebase.auth().currentUser
   let requiresAuth = to.matched.some(record => record.meta.requiresAuth)
 
-  if (requiresAuth && !currentUser) next('login')
-  else if (!requiresAuth && currentUser) next('map')
+  if (requiresAuth === true && !currentUser) next('login')
   else next()
 })
 
