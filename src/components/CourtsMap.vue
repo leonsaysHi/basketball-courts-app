@@ -1,18 +1,21 @@
 <template>
   <div class="map">
-    <MapUtils />
+    <MapUtils v-if="selectedCourt" :court="selectedCourt" :close-callback="hideCourtInfos" />
     <gmap-map
       :center="center"
       :zoom="7"
       style="width: 100%; height: 100%"
     >
-      <gmap-marker
-        :key="index"
-        v-for="(c, index) in courts"
-        :position="c.latLng"
-        :clickable="false"
-        :draggable="false"
-      ></gmap-marker>
+      <gmap-cluster>
+        <gmap-marker
+          :key="index"
+          v-for="(c, index) in courts"
+          :position="c.latLng"
+          :clickable="true"
+          :draggable="false"
+          v-on:click="showCourtInfos(c)"
+        ></gmap-marker>
+      </gmap-cluster>
     </gmap-map>
   </div>
 </template>
@@ -31,19 +34,27 @@
   export default {
     name: 'CourtsMap',
     firebase: {
-      courts: dbCourts.limitToLast(25)
+      courts: {
+        source: dbCourts,
+        cancelCallback (err) {
+          console.error(err)
+        }
+      }
     },
     components: { MapUtils },
     data () {
       return {
         center: {lat: 10.0, lng: 10.0},
-        markers: [{
-          position: {lat: 10.0, lng: 10.0}
-        }, {
-          position: {lat: 11.0, lng: 11.0}
-        }]
+        selectedCourt: null
       }
     },
-    methods: {}
+    methods: {
+      showCourtInfos (court) {
+        this.selectedCourt = court
+      },
+      hideCourtInfos () {
+        this.selectedCourt = null
+      }
+    }
   }
 </script>

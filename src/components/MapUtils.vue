@@ -1,14 +1,15 @@
 <template>
   <div class="map-utils">
-    <div class="card" style="width: 20rem;">
-        <div class="card-body">
-            <h4 class="card-title">Court infos</h4>
-            <h6 class="card-subtitle mb-2 text-muted">location...</h6>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">Data 1</li>
-                <li class="list-group-item">Data 2</li>
-            </ul>
-        </div>
+    <div class="card">
+      <div class="card-body">
+        <a v-on:click="closeCallback" class="close">&times;</a>
+        <h4 class="card-title">{{ court.title }}</h4>
+        <h6 class="card-subtitle mb-2 text-muted">{{ court.descr }}</h6>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">Data 1</li>
+            <li class="list-group-item">Data 2</li>
+        </ul>
+      </div>
     </div>
   </div>
 </template>
@@ -18,6 +19,9 @@
 
   export default {
     name: 'mapUtils',
+
+    props: ['court', 'closeCallback'],
+
     data () {
       return {
         isAuth: null
