@@ -67,6 +67,7 @@
         center: defaultPosition,
         currentUser: null,
         newCourt: {
+          creator: '',
           title: '',
           descr: '',
           latLng: defaultPosition
@@ -88,6 +89,7 @@
         } catch (err) {
           console.log(err)
         }
+        this.$router.replace('dashboard')
       }
     },
     mounted () {
@@ -105,6 +107,7 @@
     created () {
       this.currentUser = firebase.auth().currentUser
       firebase.auth().onAuthStateChanged(user => {
+        this.newCourt.creator = user.uid
         this.currentUser = user
       })
     }
