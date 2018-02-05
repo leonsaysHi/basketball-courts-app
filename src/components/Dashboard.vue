@@ -1,8 +1,8 @@
 <template>
   <div class="container dashboard">  
-    <h1>Dashboard</h1>
+    <h1>Dashboard <span v-if="user">{{ user.email }}</span></h1>
     <div class="row">
-
+    
       <div class="col-md-4">
         <div class="card">
           <div class="card-body">          
@@ -42,26 +42,25 @@
 
 <script>
   import firebase from '../modules/firebase'
-
+  import { mapState } from 'vuex'
   let dbCourts = firebase.database().ref('courts')
-
+  
   export default {
     name: 'dashboard',
+    computed: {
+      ...mapState(['user'])
+    },
     data () {
       return {
-        user: null,
         courtsaddedbyuser: [],
         courtsarounduser: [],
         courtsfavorited: []
       }
     },
     created () {
-      firebase.auth().onAuthStateChanged(user => {
-        this.user = user
-        this.$bindAsArray('courtsaddedbyuser', dbCourts.orderByChild('creator').equalTo(this.user.uid))
-        this.$bindAsArray('courtsarounduser', dbCourts.limitToLast(1))
-        this.$bindAsArray('courtsfavorited', dbCourts)
-      })
+      this.$bindAsArray('courtsaddedbyuser', dbCourts.orderByChild('creator').equalTo(this.user.uid))
+      this.$bindAsArray('courtsarounduser', dbCourts.limitToLast(1))
+      this.$bindAsArray('courtsfavorited', dbCourts)
     }
   }
 </script>
