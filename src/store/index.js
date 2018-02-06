@@ -37,24 +37,37 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    getUser: store => {
+    saveUser: ({ state, commit }, user) => {
       return new Promise((resolve, reject) => {
-        let userId = store.state.auth.uid
-        let dbUsers = firebase.database().ref('users/' + userId)
-        dbUsers.once('value').then((snapshot) => {
-          if (snapshot.val()) {
-            store.commit(types.SET_USER, { user: snapshot.val() })
+        let dbUsers = firebase.database().ref('users')
+        dbUsers.set({ [state.auth.uid]: user }, function (error) {
+          if (error) {
+            reject(new Error('error'))
           } else {
-            store.commit(types.SET_USER, { user: { error: true } })
+            resolve()
+            commit(types.SET_USER, { user })
           }
-          resolve(store.state.user)
         })
       })
     },
-    getDashboardCourts: store => {
+    getUser: ({ state, commit }) => {
+      return state.user ? new Promise(resolve => resolve(state.user)) : new Promise((resolve, reject) => {
+        let userId = state.auth.uid
+        let dbUsers = firebase.database().ref('users/' + userId)
+        dbUsers.once('value').then((snapshot) => {
+          if (snapshot.val()) {
+            commit(types.SET_USER, { user: snapshot.val() })
+          } else {
+            commit(types.SET_USER, { user: { userName: '' } })
+          }
+          resolve(state.user)
+        })
+      })
+    },
+    getDashboardCourts: ({ store, commit }) => {
       let dbCourts = firebase.database().ref('courts')
       dbCourts.orderByChild('creator').equalTo(store.state.auth.uid).ref.on('value', ref => {
-        store.commit(types.SET_COURTSADDEDBYUSER, { list: ref.val() })
+        commit(types.SET_COURTSADDEDBYUSER, { list: ref.val() })
       })
       /* return new Promise((resolve) => {
         this.$bindAsArray('courtsaddedbyuser', dbCourts.orderByChild('creator').equalTo(this.auth.uid))

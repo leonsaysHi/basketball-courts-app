@@ -6,7 +6,7 @@
         <h4 class="card-title">{{ court.title }}</h4>
         <h6 class="card-subtitle mb-2 text-muted">{{ court.descr }}</h6>
         <ul class="list-group list-group-flush">
-            <li class="list-group-item">Data 1</li>
+            <li class="list-group-item">Add to favorite</li>
             <li class="list-group-item">Data 2</li>
         </ul>
       </div>
