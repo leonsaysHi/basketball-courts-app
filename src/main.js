@@ -29,11 +29,11 @@ firebase.auth().onAuthStateChanged(function (user) {
       router,
       store,
       created () {
-        const user = firebase.auth().currentUser
-        if (user) {
-          this.$store.commit('SET_USER', { user })
+        const auth = firebase.auth().currentUser
+        if (auth) {
+          this.$store.commit('SET_AUTH', { auth })
         } else {
-          this.$store.commit('SET_USER', { user: null })
+          this.$store.commit('SET_AUTH', { auth: null })
         }
       }
     })
