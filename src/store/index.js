@@ -22,6 +22,7 @@ export default new Vuex.Store({
       state.auth = auth
     },
     [types.SET_USER] (state, { user }) {
+      user = Object.assign({ userName: '', home: '', follows: [] }, user)
       state.user = user
     },
     [types.SET_COURTSADDEDBYUSER] (state, { list }) {
@@ -58,22 +59,11 @@ export default new Vuex.Store({
           if (snapshot.val()) {
             commit(types.SET_USER, { user: snapshot.val() })
           } else {
-            commit(types.SET_USER, { user: { userName: '' } })
+            commit(types.SET_USER, { user: {} })
           }
           resolve(state.user)
         })
       })
-    },
-    getDashboardCourts: ({ store, commit }) => {
-      let dbCourts = firebase.database().ref('courts')
-      dbCourts.orderByChild('creator').equalTo(store.state.auth.uid).ref.on('value', ref => {
-        commit(types.SET_COURTSADDEDBYUSER, { list: ref.val() })
-      })
-      /* return new Promise((resolve) => {
-        this.$bindAsArray('courtsaddedbyuser', dbCourts.orderByChild('creator').equalTo(this.auth.uid))
-        this.$bindAsArray('courtsarounduser', dbCourts.limitToLast(1))
-        this.$bindAsArray('courtsfavorited', dbCourts)
-      }) */
     }
   }
 })

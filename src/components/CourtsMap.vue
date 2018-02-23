@@ -1,6 +1,6 @@
 <template>
   <div class="map">
-    <MapUtils v-if="selectedCourt" :court="selectedCourt" :close-callback="hideCourtInfos" />
+    <MapUtils v-if="selectedCourt" :user="user" :court="selectedCourt" :close-callback="hideCourtInfos" />
     <gmap-map
       :center="center"
       :zoom="7"
@@ -41,12 +41,20 @@
         }
       }
     },
+    computed: {
+    },
     components: { MapUtils },
     data () {
       return {
+        user: null,
         center: {lat: 10.0, lng: 10.0},
         selectedCourt: null
       }
+    },
+    created () {
+      this.$store.dispatch('getUser').then(result => {
+        this.user = result
+      })
     },
     methods: {
       showCourtInfos (court) {
