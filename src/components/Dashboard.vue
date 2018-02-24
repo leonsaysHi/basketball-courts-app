@@ -1,14 +1,14 @@
 <template>
   <div class="container dashboard">
     <h1>Dashboard</h1>
-    <div class="row">
+    <div class="row" v-if="user">
 
       <div class="col-md-4">
         <div class="card">
           <div class="card-body">
-            <h4 class="card-title">Added by you</h4>
+            <h4 class="card-title">Home court</h4>
             <ul class="list-group list-group-flush">
-                <li class="list-group-item" v-for="(c, index) in []">{{ c.title }}</li>
+                <li class="list-group-item">{{ user.home }}</li>
             </ul>
           </div>
         </div>
@@ -17,9 +17,9 @@
       <div class="col-md-4">
         <div class="card">
           <div class="card-body">
-            <h4 class="card-title">Favorited</h4>
+            <h4 class="card-title">Followed</h4>
             <ul class="list-group list-group-flush">
-                <li class="list-group-item" v-for="(c, index) in []">{{ c.title }}</li>
+                <li class="list-group-item" v-for="(c, index) in user.follows">{{ c }}</li>
             </ul>
           </div>
         </div>
@@ -30,8 +30,8 @@
           <div class="card-body">
             <h4 class="card-title">User</h4>
             <div class="form-user" v-if="editUser">
-              <label for="inputEmail" class="sr-only">Username</label>
-              <input v-model="user.userName" type="email" id="inputUserName" class="form-control" placeholder="Email address" required="" autofocus="">
+              <label for="inputUserName" class="sr-only">Username</label>
+              <input v-model="user.userName" type="text" id="inputUserName" class="form-control" placeholder="User name" required="" autofocus="">
               <button class="btn btn-lg btn-primary btn-block" v-on:click="saveUser" type="submit">Save</button>
             </div>
             <div v-if="!editUser">
@@ -47,13 +47,12 @@
 </template>
 
 <script>
-  import { mapGetters, mapState } from 'vuex'
+  import { mapGetters } from 'vuex'
 
   export default {
     name: 'dashboard',
     computed: {
-      ...mapGetters(['user']),
-      ...mapState(['auth'])
+      ...mapGetters(['user'])
     },
     data () {
       return {
@@ -61,10 +60,14 @@
       }
     },
     created () {
+      if (!this.user) {
+        this.$store.dispatch('getUser').then(result => {})
+      }
     },
     methods: {
       saveUser () {
-        this.$store.dispatch('saveUser', this.user).then(result => {
+        const u = Object.assign({}, this.user)
+        this.$store.dispatch('saveUser', u).then(result => {
           this.editUser = false
         })
       }

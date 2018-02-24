@@ -15,7 +15,8 @@ export default new Vuex.Store({
     user: null,
     dashboardcourts: {
       courtaddedbyuser: []
-    }
+    },
+    courts: []
   },
   mutations: {
     [types.SET_AUTH] (state, { auth }) {
@@ -24,6 +25,10 @@ export default new Vuex.Store({
     [types.SET_USER] (state, { user }) {
       user = Object.assign({ userName: '', home: '', follows: [] }, user)
       state.user = user
+    },
+    [types.SET_COURTS] (state, { courts }) {
+      courts = Object.assign({}, courts)
+      state.courts = courts
     },
     [types.SET_COURTSADDEDBYUSER] (state, { list }) {
       state.dashboardcourts.courtaddedbyuser = list
@@ -35,6 +40,9 @@ export default new Vuex.Store({
     },
     user: state => {
       return state.user
+    },
+    courts: state => {
+      return state.courts
     }
   },
   actions: {
@@ -62,6 +70,20 @@ export default new Vuex.Store({
             commit(types.SET_USER, { user: {} })
           }
           resolve(state.user)
+        })
+      })
+    },
+    getCourts: ({ state, commit }, { center, zoom }) => {
+      return new Promise((resolve, reject) => {
+        console.log('searchCourts', center, zoom)
+        let dbCourts = firebase.database().ref('courts')
+        dbCourts.once('value').then((snapshot) => {
+          if (snapshot.val()) {
+            commit(types.SET_COURTS, { courts: snapshot.val() })
+          } else {
+            commit(types.SET_COURTS, { courts: [] })
+          }
+          resolve(state.courts)
         })
       })
     }
